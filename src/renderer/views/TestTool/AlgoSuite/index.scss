@@ -1,7 +1,21 @@
-.algo-test-tool {
+.algo-hl7-container {
   display: flex;
+  justify-content: center;
+  align-items: center !important;
+}
+
+
+.algo-test-tool {
+  padding-top: 50px;
+  display: flex;
+  align-items: start;
+  justify-content: center;
   .hl7-config {
+    width: 50vw;
+    margin-right: 36px;
     flex: 1;
+    border: 1px solid #DDDDDD;
+    // box-shadow: 2px 2px 1px 1px #ccc;
   }
   .btn {
     width: 80px;
