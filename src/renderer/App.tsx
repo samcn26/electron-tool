@@ -1,12 +1,11 @@
 /* eslint-disable react/button-has-type */
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import { MemoryRouter as Router } from 'react-router-dom';
+import DefaultLayout from './layout/DefaultLayout';
 
 export default function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<span>TODO</span>} />
-      </Routes>
+      <DefaultLayout />
     </Router>
   );
 }

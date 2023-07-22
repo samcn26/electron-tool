@@ -1,0 +1,29 @@
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.not-found-content {
+  text-align: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.not-found-title {
+  font-size: 72px;
+  font-weight: bold;
+  color: #ff5851;
+  margin: 0;
+}
+
+.not-found-message {
+  font-size: 24px;
+  color: #666;
+  margin: 10px 0;
+}
+
+/* Add any additional styling for the fancy 404 page */
