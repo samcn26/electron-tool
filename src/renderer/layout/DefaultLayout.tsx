@@ -8,7 +8,7 @@ const { Content, Sider } = Layout;
 const DefaultLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ height: '100vh' }}>
       <Sider
         collapsible
         collapsed={collapsed}
@@ -18,7 +18,7 @@ const DefaultLayout = () => {
       </Sider>
 
       <Layout>
-        <Content style={{ margin: '16px' }}>
+        <Content style={{ margin: '16px', overflowY: 'auto' }}>
           {/* <Header style={{ padding: 0, background: 'white' }} /> */}
           {/* <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
