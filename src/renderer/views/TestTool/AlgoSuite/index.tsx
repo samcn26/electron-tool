@@ -1,38 +1,46 @@
 import './index.scss';
 import { useState, useEffect } from 'react';
-import { Button, Space, message } from 'antd';
+import { Button, Space, message, Col, Row } from 'antd';
 import { GET } from 'renderer/api/ipc';
-import { algoHl7Config } from 'renderer/utils/consts';
+import { algoHl7Config, FTPConfig } from 'renderer/utils/consts';
 import yaml from 'js-yaml';
 import YamlEditor from '@focus-reactive/react-yaml';
+// import FTPOperator from './FTPoperator';
 
-import { getHl7 } from '../../../api/algosuite';
+import { getHl7, operateFtp } from '../../../api/algosuite';
 
 const AlgoSuiteTool = () => {
-  const [yml, setYml] = useState(yaml.load(algoHl7Config) as object);
-  const [hasError, setError] = useState(false);
+  const [template, setTemplate] = useState(yaml.load(algoHl7Config) as object);
+  const [templateError, setTemplateError] = useState(false);
+
+  const [ftpCfg, setFtpCfg] = useState(yaml.load(FTPConfig) as object);
+  const [ftpCfgError, setFtpCfgError] = useState(false);
+
   const [messageApi, contextHolder] = message.useMessage();
 
-  const handleClick = () => {
-    if (!hasError) {
-      getHl7(yml);
+  const interaction = (
+    cb: any,
+    err: boolean,
+    msg: string = '请检查yml格式'
+  ) => {
+    if (!err) {
+      cb();
     } else {
       messageApi.open({
         type: 'error',
-        content: '请检查yml格式',
+        content: msg,
       });
     }
   };
-  const handleChange = ({ json }: any) => {
-    setYml(json);
-    setError(false);
-  };
-  const handleError = (err: any) => {
-    setError(err);
+
+  const handleFtp = (type: 'order' | 'observation' | 'together') => {
+    interaction(() => {
+      operateFtp({ type, template, ftpCfg });
+    }, ftpCfgError);
   };
 
   useEffect(() => {
-    const listener = GET('/algo/getHl7', ({ code, message: content }) => {
+    const listener = GET('/algo/response', ({ code, message: content }) => {
       if (code === 0) {
         messageApi.open({
           type: 'success',
@@ -57,20 +65,80 @@ const AlgoSuiteTool = () => {
       <div className="hl7-config">
         <YamlEditor
           text={algoHl7Config}
-          onChange={handleChange}
-          onError={handleError}
+          onChange={({ json }: any) => {
+            setTemplate(json);
+            setTemplateError(false);
+          }}
+          onError={(err: any) => {
+            setTemplateError(err);
+          }}
         />
       </div>
+      <Space className="operate" direction="vertical">
+        <Row>
+          <Col span={24}>
+            <Button
+              type="primary"
+              style={{ display: 'inline-block', width: '100%' }}
+              // shape="circle"
+              className="btn"
+              // style={{ width: '80px', height: '80px' }}
+              onClick={() => {
+                interaction(() => {
+                  getHl7(template);
+                }, templateError);
+              }}
+            >
+              生成HL7
+            </Button>
+          </Col>
+        </Row>
 
-      <Button
-        type="primary"
-        shape="circle"
-        className="btn"
-        style={{ width: '80px', height: '80px' }}
-        onClick={handleClick}
-      >
-        生成HL7
-      </Button>
+        <Row gutter={[6, 0]}>
+          <Col span={12}>
+            <Button
+              style={{ width: '100%' }}
+              onClick={() => handleFtp('order')}
+            >
+              发送 Order
+            </Button>
+          </Col>
+          <Col span={12}>
+            <Button
+              style={{ width: '100%' }}
+              onClick={() => handleFtp('observation')}
+            >
+              发送 Observation
+            </Button>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col span={24}>
+            <Button
+              style={{ display: 'inline-block', width: '100%' }}
+              onClick={() => handleFtp('together')}
+            >
+              发送 Order + Observation
+            </Button>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col className="ftp-cfg" span={24}>
+            <YamlEditor
+              onChange={({ json }) => {
+                setFtpCfg(json);
+                setFtpCfgError(false);
+              }}
+              text={FTPConfig}
+              onError={(error: any) => {
+                setFtpCfgError(error);
+              }}
+            />
+          </Col>
+        </Row>
+      </Space>
     </Space>
   );
 };

@@ -30,7 +30,7 @@ export const locMapping = {
   // hl7 location mapping
   MSH: {
     // Message Control ID use order
-    orderNum: 10,
+    orderNum: 9,
   },
   PID: {
     dateOfBirth: 7,

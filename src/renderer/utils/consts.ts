@@ -32,7 +32,24 @@ observation:
       unit: pmol/L
       checkTime: 20230603080000
     - item: S3_CA125
-      value: ">5000"
+      value: 7
       unit: U/mL
       checkTime: 20230604080000
+`;
+
+export const FTPConfig: string = `# 只支持单个sandbox发送
+host: 47.108.213.112
+username: root
+password: Flzx3kc@
+port: 22
+sandbox:
+  # 不需要发的注释掉
+  - name: cdp013
+    rootpath: /tmp/corelab/cdp013/interface/CDP_Files
+    order: Orders
+    observation: Results
+  # - name: cdp014
+  #   rootpath: /tmp/corelab/cdp014_2/interface/CDP_Files
+  #   order: Orders
+  #   observation: Results
 `;
